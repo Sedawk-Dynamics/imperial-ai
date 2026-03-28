@@ -486,10 +486,10 @@ export default function Home() {
             rel="noopener noreferrer"
             className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#1565c0]/10 to-[#ff6f00]/10 border border-[#1565c0]/20 hover:border-[#ff6f00]/30 text-white/80 hover:text-white text-xs font-medium transition-all hover:shadow-lg hover:shadow-[#1565c0]/10"
           >
-            Imperial
-            <div className="h-5 w-5 rounded-full bg-gradient-to-br from-[#1565c0] to-[#ff6f00] flex items-center justify-center">
-              <img src="/images/white-torch-logo.png" alt="" className="h-3 w-3 object-contain" />
-            </div>
+            Visit Website
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
           </a>
         </div>
       </nav>
@@ -554,9 +554,7 @@ export default function Home() {
                 <div className="flex items-center justify-between px-5 py-3 bg-gradient-to-r from-[#0a2540] via-[#122e4f] to-[#1565c0] border-b border-white/5">
                   <div className="flex items-center gap-2.5">
                     <div className="relative">
-                      <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-[#1565c0] to-[#ff6f00] flex items-center justify-center shadow-lg shadow-[#1565c0]/30">
-                        <img src="/images/white-torch-logo.png" alt="" className="h-5 w-5 object-contain" />
-                      </div>
+                      <img src="/images/white-torch-logo.png" alt="Imperia.AI" className="h-11 w-11 object-contain" />
                       <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-green-400 border-2 border-[#0a2540]" />
                     </div>
                     <div>
@@ -604,14 +602,7 @@ export default function Home() {
                       transition={{ duration: 0.4, delay: idx === messages.length - 1 ? 0.08 : 0, ease: [0.16, 1, 0.3, 1] }}
                       className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                     >
-                      {/* Assistant avatar */}
-                      {msg.role === "assistant" && (
-                        <div className="flex-shrink-0 mt-0.5">
-                          <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-[#1565c0] to-[#ff6f00] flex items-center justify-center shadow-md shadow-[#1565c0]/20">
-                            <img src="/images/white-torch-logo.png" alt="" className="h-4 w-4 object-contain" />
-                          </div>
-                        </div>
-                      )}
+                      {/* Assistant avatar removed */}
 
                       {msg.role === "user" ? (
                         <div className="flex flex-col items-end max-w-[88%] sm:max-w-[75%]">
