@@ -89,12 +89,14 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false)
   const [isChatOpen, setIsChatOpen] = useState(false)
   const [isListening, setIsListening] = useState(false)
+  const [voicePendingSubmit, setVoicePendingSubmit] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const chatInputRef = useRef<HTMLInputElement>(null)
   const abortRef = useRef<AbortController | null>(null)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const recognitionRef = useRef<any>(null)
+  const voiceAutoSubmitRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const farewellSentRef = useRef(false)
   const isMobile = typeof window !== "undefined" && window.innerWidth < 640
@@ -239,6 +241,14 @@ export default function Home() {
     }
   }
 
+  // Auto-submit voice transcript via state to avoid stale closure issues
+  useEffect(() => {
+    if (voicePendingSubmit) {
+      sendMessage(voicePendingSubmit)
+      setVoicePendingSubmit(null)
+    }
+  }, [voicePendingSubmit, sendMessage])
+
   const toggleMic = useCallback(() => {
     const SpeechRecognitionAPI =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
@@ -262,16 +272,33 @@ export default function Home() {
         .map((r: SpeechRecognitionResult) => r[0].transcript)
         .join("")
       setInput(transcript)
+
+      // Reset 3s auto-submit timer on every new result
+      if (voiceAutoSubmitRef.current) clearTimeout(voiceAutoSubmitRef.current)
+      voiceAutoSubmitRef.current = setTimeout(() => {
+        voiceAutoSubmitRef.current = null
+        if (transcript.trim()) setVoicePendingSubmit(transcript.trim())
+        recognition.stop()
+      }, 3000)
     }
 
     recognition.onend = () => {
       setIsListening(false)
       recognitionRef.current = null
+      // Only clear timer if it hasn't fired yet (user manually stopped mic)
+      if (voiceAutoSubmitRef.current) {
+        clearTimeout(voiceAutoSubmitRef.current)
+        voiceAutoSubmitRef.current = null
+      }
     }
 
     recognition.onerror = () => {
       setIsListening(false)
       recognitionRef.current = null
+      if (voiceAutoSubmitRef.current) {
+        clearTimeout(voiceAutoSubmitRef.current)
+        voiceAutoSubmitRef.current = null
+      }
     }
 
     recognitionRef.current = recognition
