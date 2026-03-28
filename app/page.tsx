@@ -116,7 +116,7 @@ export default function Home() {
     }
   }, [isChatOpen])
 
-  // 30-second inactivity farewell — fires ONCE per chat session, never loops
+  // 5-minute inactivity farewell — fires ONCE per chat session, never loops
   useEffect(() => {
     if (!isChatOpen || isLoading || messages.length === 0) return
     if (farewellSentRef.current) return
@@ -137,7 +137,7 @@ export default function Home() {
           content: `It was great chatting with you${firstName}! If you ever have more questions about Imperial Healthcare Systems or RCM, feel free to come back anytime.\n\n— Imperia.AI | Imperial Healthcare Systems`,
         },
       ])
-    }, 30000)
+    }, 300000)
 
     return () => {
       if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
